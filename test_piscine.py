@@ -22,13 +22,13 @@ class TestReplaceHex(unittest.TestCase):
         self.assertFalse(should_replace_a_with_an('a', '123'))
 
     def test_match(self):
-        self.assertTrue(match('(cap, 2)'))
-        self.assertTrue(match('(low, 1)'))
-        self.assertFalse(match('(bin, 4)'))
-        self.assertTrue(match('(up, 3)'))
-        self.assertFalse(match('cap, 2)'))
-        self.assertFalse(match('(low, 1'))
-        self.assertFalse(match('hello world'))
+        self.assertTrue(is_matching('(cap, 2)'))
+        self.assertTrue(is_matching('(low, 1)'))
+        self.assertFalse(is_matching('(bin, 4)'))
+        self.assertTrue(is_matching('(up, 3)'))
+        self.assertFalse(is_matching('cap, 2)'))
+        self.assertFalse(is_matching('(low, 1'))
+        self.assertFalse(is_matching('hello world'))
 
     def test_split_punctuation_and_word(self):
         self.assertEqual(split_punctuation_and_word('Hello,world!'), 'Hello, world!')

@@ -21,9 +21,9 @@ def should_replace_a_with_an(current_word, next_word):
     return False
     
 
-def match(word):
+def is_matching(word):
     pattern = r'\((cap|low|up),\s*\d+\)'
-    return re.search(pattern, word)
+    return bool(re.search(pattern, word))
 
 def split_text(text:str):
     pattern = r'\([^)]+\)'
@@ -65,7 +65,7 @@ def edit_text(text: str):
             words.pop(i)
             i-=1    
 
-        if match(current_word):
+        if is_matching(current_word):
             code = current_word[1:-1].split(',')
             n = int(code[1])
             code = f'({code[0]})'
