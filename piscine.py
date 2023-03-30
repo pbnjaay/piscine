@@ -47,6 +47,9 @@ def split_punctuation_and_word(text:str):
 
     return text
 
+def strip_espace_between_apostrophe_and_word(text: str):
+    pattern = r''
+
 
 def edit_text(text: str):
     i = 0
@@ -59,39 +62,41 @@ def edit_text(text: str):
         next_word = words[i+1] if i+1 < len(words) else None
         prev_word = words[i-1] if i > 0 else None
 
-        if current_word in code_to_func:
+        if current_word in code_to_func and prev_word:
             func = code_to_func[current_word]
             words[i-1] = func(prev_word)
             words.pop(i)
             i-=1    
 
         if is_matching(current_word):
-            code = current_word[1:-1].split(',')
-            n = int(code[1])
-            code = f'({code[0]})'
+            codes = current_word[1:-1].split(',')
+            code = f'({codes[0]})'
             func = code_to_func[code]
             words.pop(i)
             i-=1
+            n = int(codes[1]) if int(codes[1]) < i else i + 1
             for j in range(n):
                 words[i-j] = func(words[i-j])
 
         if should_replace_a_with_an(current_word, next_word):
             words[i] = current_word + 'n'
 
-        if is_punctuation(current_word):
+        if is_punctuation(current_word) and prev_word:
             words[i-1] = prev_word + current_word
             words.pop(i)
             i-=1
 
-        if current_word == "'":
+        if current_word == "'" or current_word.startswith("'"):
             apostrophe_count +=1
-            if apostrophe_count%2 == 0:
-                words[i-1] = prev_word + current_word
+            if apostrophe_count%2 == 0 and len(current_word) == 1 and prev_word:
+                words[i-1] =  prev_word + current_word
+                words.pop(i)
+                i-=1
             else:
-                words[i+1] = current_word + next_word
-
-            words.pop(i)
-            i-=1
+                if apostrophe_count%2 !=0 and len(current_word) == 1 and next_word:
+                    words[i+1] = current_word + next_word
+                    words.pop(i)
+                    i+=1
 
         i +=1
 
